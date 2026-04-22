@@ -112,7 +112,7 @@ body::after {
 /* ── GRID ── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
 }
 
@@ -181,6 +181,11 @@ body::after {
 .card-icon.pdf {
   background: linear-gradient(135deg, #e94560, #f39c12);
   box-shadow: 0 6px 24px rgba(233,69,96,0.3);
+}
+
+.card-icon.comp {
+  background: linear-gradient(135deg, #2ecc71, #27ae60);
+  box-shadow: 0 6px 24px rgba(46,204,113,0.3);
 }
 
 .card h2 {
@@ -253,6 +258,14 @@ body::after {
       <div class="card-icon ask-ari">💬</div>
       <h2>Ask Ari</h2>
       <p>AI-powered answers from our FedEx training docs. Corrections and knowledge additions by the team, so it stays current.</p>
+      <span class="card-arrow">Open tool →</span>
+    </a>
+
+    <!-- COMP TOOL -->
+    <a class="card" href="https://docs.google.com/spreadsheets/d/1BdP7k0Kx1W2O_N4D5TTHO4LkNnDs8ujg-dJsTx6_EPA/edit?gid=1839724813#gid=1839724813" target="_blank">
+      <div class="card-icon comp">💰</div>
+      <h2>Comp Tool</h2>
+      <p>FEC compensation spreadsheet for salary ranges, pay transparency, and offer calculations by location and grade level.</p>
       <span class="card-arrow">Open tool →</span>
     </a>
 
