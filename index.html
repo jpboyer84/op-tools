@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OP Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0d0d1a;
+  --bg-card: #141425;
+  --bg-card-hover: #1a1a32;
+  --border: rgba(255,255,255,0.06);
+  --text: #e0e0e0;
+  --text-dim: #888;
+  --text-hint: #555;
+  --accent: #4cc9f0;
+  --accent-2: #4361ee;
+  --gradient: linear-gradient(135deg, #4361ee, #4cc9f0);
+  --font: 'DM Sans', system-ui, sans-serif;
+  --radius: 16px;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Noise */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+/* Ambient glow */
+body::after {
+  content: '';
+  position: fixed;
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 800px;
+  height: 500px;
+  background: radial-gradient(ellipse, rgba(67,97,238,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 960px;
+  padding: 3rem 2rem;
+}
+
+/* ── HEADER ── */
+.header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.header-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent);
+  background: rgba(76,201,240,0.08);
+  border: 1px solid rgba(76,201,240,0.15);
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  margin-bottom: 0.6rem;
+  background: var(--gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header p {
+  color: var(--text-dim);
+  font-size: 1.05rem;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── GRID ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* ── CARD ── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--gradient);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  border-color: rgba(76,201,240,0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(67,97,238,0.06);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.card-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+
+.card-icon.ask-ari {
+  background: linear-gradient(135deg, #4361ee, #4cc9f0);
+  box-shadow: 0 6px 24px rgba(67,97,238,0.3);
+}
+
+.card-icon.paradox {
+  background: linear-gradient(135deg, #7c3aed, #a78bfa);
+  box-shadow: 0 6px 24px rgba(124,58,237,0.3);
+}
+
+.card-icon.pdf {
+  background: linear-gradient(135deg, #e94560, #f39c12);
+  box-shadow: 0 6px 24px rgba(233,69,96,0.3);
+}
+
+.card h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.card p {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.6;
+}
+
+.card-arrow {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  color: var(--text-hint);
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s, gap 0.2s;
+}
+
+.card:hover .card-arrow {
+  color: var(--accent);
+  gap: 10px;
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  margin-top: 4rem;
+  color: var(--text-hint);
+  font-size: 0.75rem;
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
+  }
+  .header h1 { font-size: 2rem; }
+  .page { padding: 2rem 1.2rem; }
+  .card { padding: 2rem 1.5rem; }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .grid { gap: 1.5rem; }
+  .card { padding: 2rem 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="header">
+    <div class="header-label">Internal Tools</div>
+    <h1>OP Tools</h1>
+    <p>Everything we've built to make the job easier. Pick a tool.</p>
+  </header>
+
+  <div class="grid">
+
+    <!-- ASK ARI -->
+    <a class="card" href="https://script.google.com/a/macros/opraas.com/s/AKfycbyXSJRqJ4POM-4a4bY4OjTKBJiVh68DWlvnOic28H9z0NPJSNf9yxkG2wXzGDqudbuQ/exec" target="_blank">
+      <div class="card-icon ask-ari">💬</div>
+      <h2>Ask Ari</h2>
+      <p>AI-powered answers from our FedEx training docs. Corrections and knowledge additions by the team, so it stays current.</p>
+      <span class="card-arrow">Open tool →</span>
+    </a>
+
+    <!-- PARADOX TOOLS -->
+    <a class="card" href="https://jpboyer84.github.io/Paradox-Tools/" target="_blank">
+      <div class="card-icon paradox">⚡</div>
+      <h2>Paradox Tools</h2>
+      <p>Bulk resume downloads and candidate disposition for Paradox.ai. Chrome extension with one-click install.</p>
+      <span class="card-arrow">Open tool →</span>
+    </a>
+
+    <!-- PDF BROWSER -->
+    <a class="card" href="https://jpboyer84.github.io/pdf-browser/" target="_blank">
+      <div class="card-icon pdf">📄</div>
+      <h2>PDF Browser</h2>
+      <p>Lightweight PDF viewer with keyword search and page deletion. Drop a PDF, find what you need, trim the rest.</p>
+      <span class="card-arrow">Open tool →</span>
+    </a>
+
+  </div>
+
+  <div class="footer">OP Tools — Internal use only</div>
+</div>
+
+</body>
+</html>
