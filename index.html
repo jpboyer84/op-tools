@@ -4,8 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>OP Tools</title>
+<meta name="description" content="Internal tools for the OP recruiting team: Ask Ari, the Paradox extension, PDF Browser, and comp references.">
+<meta property="og:title" content="OP Tools">
+<meta property="og:description" content="Internal tools for the OP recruiting team: Ask Ari, the Paradox extension, PDF Browser, and comp references.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jpboyer84.github.io/op-tools/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%234361ee'/%3E%3Cstop offset='1' stop-color='%234cc9f0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='32' height='32' rx='8' fill='url(%23g)'/%3E%3Ctext x='16' y='21.5' font-family='Arial' font-weight='700' font-size='14' fill='white' text-anchor='middle'%3EOP%3C/text%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -13,42 +19,32 @@
   --bg: #0d0d1a;
   --bg-card: #141425;
   --bg-card-hover: #1a1a32;
-  --border: rgba(255,255,255,0.06);
-  --text: #e0e0e0;
-  --text-dim: #888;
-  --text-hint: #555;
+  --border: rgba(255,255,255,0.07);
+  --text: #e6e6ea;
+  --text-dim: #9a9aa8;
+  --text-hint: #6a6a7a;
   --accent: #4cc9f0;
-  --accent-2: #4361ee;
   --gradient: linear-gradient(135deg, #4361ee, #4cc9f0);
-  --font: 'DM Sans', system-ui, sans-serif;
-  --radius: 16px;
+  --font: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
-
-html { scroll-behavior: smooth; }
 
 body {
   font-family: var(--font);
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   -webkit-font-smoothing: antialiased;
 }
 
-/* Noise */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
-  z-index: 0;
   opacity: 0.03;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
   pointer-events: none;
 }
 
-/* Ambient glow */
 body::after {
   content: '';
   position: fixed;
@@ -57,246 +53,313 @@ body::after {
   transform: translateX(-50%);
   width: 800px;
   height: 500px;
-  background: radial-gradient(ellipse, rgba(67,97,238,0.08) 0%, transparent 70%);
+  background: radial-gradient(ellipse, rgba(67,97,238,0.09) 0%, transparent 70%);
   pointer-events: none;
-  z-index: 0;
 }
 
 .page {
   position: relative;
   z-index: 1;
-  width: 100%;
-  max-width: 960px;
-  padding: 3rem 2rem;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 4rem 2rem 3rem;
 }
 
-/* ── HEADER ── */
-.header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.header-label {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  color: var(--accent);
-  background: rgba(76,201,240,0.08);
-  border: 1px solid rgba(76,201,240,0.15);
-  padding: 6px 16px;
-  border-radius: 20px;
-  margin-bottom: 1.5rem;
-}
+/* Header */
+.header { margin-bottom: 2.75rem; }
 
 .header h1 {
-  font-size: 2.8rem;
+  font-size: 3rem;
   font-weight: 700;
-  letter-spacing: -1px;
-  margin-bottom: 0.6rem;
+  letter-spacing: -1.5px;
+  line-height: 1.05;
   background: var(--gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  display: inline-block;
 }
 
 .header p {
+  margin-top: 0.6rem;
   color: var(--text-dim);
   font-size: 1.05rem;
-  max-width: 480px;
-  margin: 0 auto;
   line-height: 1.6;
+  max-width: 34em;
 }
 
-/* ── GRID ── */
+/* Impact strip (hidden until stats load) */
+.impact {
+  display: none;
+  grid-template-columns: repeat(3, 1fr);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: rgba(20,20,37,0.6);
+  margin-bottom: 3rem;
+}
+.impact.ready { display: grid; }
+.impact div { padding: 1.1rem 1.4rem; }
+.impact div + div { border-left: 1px solid var(--border); }
+.impact strong {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  font-variant-numeric: tabular-nums;
+}
+.impact span { font-size: 0.82rem; color: var(--text-dim); }
+
+/* Sections */
+.section + .section { margin-top: 3rem; }
+
+.section h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  margin-bottom: 1rem;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
-/* ── CARD ── */
+/* Cards */
 .card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 2.5rem 2rem;
-  text-align: center;
-  text-decoration: none;
-  color: var(--text);
-  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 1.2rem;
-}
-
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--gradient);
-  opacity: 0;
-  transition: opacity 0.3s;
+  gap: 0.9rem;
+  padding: 1.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  color: var(--text);
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
 }
 
 .card:hover {
   background: var(--bg-card-hover);
-  border-color: rgba(76,201,240,0.15);
-  transform: translateY(-6px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 40px rgba(67,97,238,0.06);
+  border-color: rgba(76,201,240,0.2);
+  transform: translateY(-3px);
 }
 
-.card:hover::before {
-  opacity: 1;
-}
-
-.card-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28px;
-  flex-shrink: 0;
-}
-
-.card-icon.ask-ari {
-  background: linear-gradient(135deg, #4361ee, #4cc9f0);
-  box-shadow: 0 6px 24px rgba(67,97,238,0.3);
-}
-
-.card-icon.paradox {
-  background: linear-gradient(135deg, #7c3aed, #a78bfa);
-  box-shadow: 0 6px 24px rgba(124,58,237,0.3);
-}
-
-.card-icon.pdf {
-  background: linear-gradient(135deg, #e94560, #f39c12);
-  box-shadow: 0 6px 24px rgba(233,69,96,0.3);
-}
-
-.card-icon.comp {
-  background: linear-gradient(135deg, #2ecc71, #27ae60);
-  box-shadow: 0 6px 24px rgba(46,204,113,0.3);
+.card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 
 .card h2 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   letter-spacing: -0.3px;
 }
 
 .card p {
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   color: var(--text-dim);
   line-height: 1.6;
 }
 
-.card-arrow {
-  margin-top: auto;
-  padding-top: 0.5rem;
-  color: var(--text-hint);
-  font-size: 0.8rem;
-  font-weight: 500;
+.card-top {
   display: flex;
   align-items: center;
+  gap: 0.9rem;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.icon svg { width: 24px; height: 24px; fill: #fff; }
+
+.icon.ari { background: linear-gradient(135deg, #4361ee, #4cc9f0); }
+.icon.paradox { background: linear-gradient(135deg, #4a25aa, #7c3aed); }
+.icon.pdf { background: linear-gradient(135deg, #c0392b, #e94560); }
+.icon.sheets { background: linear-gradient(135deg, #188038, #34a853); }
+.icon.excel { background: linear-gradient(135deg, #185c37, #21a366); }
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
   gap: 6px;
-  transition: color 0.2s, gap 0.2s;
+  margin-top: auto;
+  padding-top: 0.25rem;
 }
 
-.card:hover .card-arrow {
-  color: var(--accent);
-  gap: 10px;
+.tag {
+  font-size: 0.74rem;
+  font-weight: 500;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.03);
+  padding: 3px 10px;
+  border-radius: 999px;
 }
 
-/* ── FOOTER ── */
+.tag.lock { color: #f5c06b; border-color: rgba(245,192,107,0.25); }
+
+/* Featured Ask Ari card */
+.featured {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.75rem;
+  padding: 2.25rem;
+  position: relative;
+  overflow: hidden;
+  border-color: rgba(76,201,240,0.18);
+  background:
+    radial-gradient(ellipse at 100% 0%, rgba(76,201,240,0.10), transparent 60%),
+    var(--bg-card);
+}
+
+.featured .icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(67,97,238,0.35);
+}
+.featured .icon svg { width: 36px; height: 36px; }
+
+.featured .body { display: flex; flex-direction: column; gap: 0.6rem; flex: 1; }
+.featured h2 { font-size: 1.6rem; }
+.featured p { font-size: 0.98rem; max-width: 38em; }
+
+.btn {
+  flex-shrink: 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--gradient);
+  padding: 12px 22px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
+
 .footer {
-  text-align: center;
-  margin-top: 4rem;
+  margin-top: 3.5rem;
+  font-size: 0.8rem;
   color: var(--text-hint);
-  font-size: 0.75rem;
 }
 
-/* ── MOBILE ── */
-@media (max-width: 768px) {
-  .grid {
-    grid-template-columns: 1fr;
-    gap: 1.2rem;
-  }
-  .header h1 { font-size: 2rem; }
-  .page { padding: 2rem 1.2rem; }
-  .card { padding: 2rem 1.5rem; }
+@media (max-width: 720px) {
+  .page { padding: 2.5rem 1.2rem 2rem; }
+  .header h1 { font-size: 2.3rem; }
+  .grid { grid-template-columns: 1fr; }
+  .featured { flex-direction: column; align-items: flex-start; padding: 1.75rem; }
+  .impact { grid-template-columns: 1fr; }
+  .impact div + div { border-left: none; border-top: 1px solid var(--border); }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-  .grid { gap: 1.5rem; }
-  .card { padding: 2rem 1.5rem; }
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+  .card:hover { transform: none; }
 }
 </style>
 </head>
 <body>
 
 <div class="page">
+
   <header class="header">
-    <div class="header-label">Internal Tools</div>
     <h1>OP Tools</h1>
-    <p>Everything we've built to make the job easier. Pick a tool.</p>
+    <p>Everything the team has built to make recruiting faster. Pick a tool.</p>
   </header>
 
-  <div class="grid">
-
-    <!-- ASK ARI -->
-    <a class="card" href="https://script.google.com/a/macros/opraas.com/s/AKfycbyXSJRqJ4POM-4a4bY4OjTKBJiVh68DWlvnOic28H9z0NPJSNf9yxkG2wXzGDqudbuQ/exec" target="_blank">
-      <div class="card-icon ask-ari">💬</div>
-      <h2>Ask Ari</h2>
-      <p>AI-powered answers from our FedEx training docs. Corrections and knowledge additions by the team, so it stays current.</p>
-      <span class="card-arrow">Open tool →</span>
-    </a>
-
-    <!-- PDF BROWSER -->
-    <a class="card" href="https://jpboyer84.github.io/pdf-browser/" target="_blank">
-      <div class="card-icon pdf">📄</div>
-      <h2>PDF Browser</h2>
-      <p>Browse any PDF with Boolean keyword search (AND, OR, NOT) to find exactly what you need. Delete pages as you review and download the trimmed result.</p>
-      <span class="card-arrow">Open tool →</span>
-    </a>
-
-    <!-- COMP TOOL -->
-    <a class="card" href="https://docs.google.com/spreadsheets/d/1JwqjIQXY_pbmRptMdnn1TWT_x_0o3h0DIiVFyPcQl2g/edit?usp=sharing" target="_blank">
-      <div class="card-icon comp">💰</div>
-      <h2>FEC Hiring Tool</h2>
-      <p>FEC compensation spreadsheet for salary ranges, pay transparency, and offer calculations by location and grade level.</p>
-      <span class="card-arrow">Open tool →</span>
-    </a>
-
-    <!-- FDW HIRING TOOL -->
-    <a class="card" href="https://myfedex.sharepoint.com.mcas.ms/:x:/t/InterviewGuides/IQBTA70X-oKYTowqBb1Rv3c5ARfMA4M64o9LQYNaqOARVo0" target="_blank">
-      <div class="card-icon comp">📊</div>
-      <h2>FDW Hiring Tool</h2>
-      <p>FDW compensation spreadsheet for salary ranges and offer calculations. Requires FedEx sign-in.</p>
-      <span class="card-arrow">Open tool →</span>
-    </a>
-
-    <!-- PARADOX EXTENSION -->
-    <a class="card" href="https://jpboyer84.github.io/Paradox-Tools/" target="_blank">
-      <div class="card-icon paradox">⚡</div>
-      <h2>Paradox Extension</h2>
-      <p>Bulk resume downloads and candidate disposition for Paradox.ai. Chrome extension with one-click install.</p>
-      <span class="card-arrow">Open tool →</span>
-    </a>
-
+  <!-- Impact numbers: shown only once STATS_URL is set and returns data -->
+  <div class="impact" id="impact">
+    <div><strong id="stat-resumes">0</strong><span>Resumes downloaded</span></div>
+    <div><strong id="stat-hours">0</strong><span>Hours saved</span></div>
+    <div><strong id="stat-questions">0</strong><span>Questions answered by Ari</span></div>
   </div>
 
-  <div class="footer">OP Tools — Internal use only</div>
+  <section class="section">
+    <h3>AI and automation</h3>
+    <div class="grid">
+
+      <a class="card featured" href="https://script.google.com/a/macros/opraas.com/s/AKfycbyXSJRqJ4POM-4a4bY4OjTKBJiVh68DWlvnOic28H9z0NPJSNf9yxkG2wXzGDqudbuQ/exec" target="_blank" rel="noopener">
+        <div class="icon ari"><svg viewBox="0 0 24 24"><path d="M12 3C6.5 3 2 6.6 2 11c0 2.3 1.2 4.4 3.2 5.8-.2 1.3-.8 2.6-1.9 3.6-.2.2 0 .5.2.5 2.3.1 4.3-.7 5.6-1.6.9.2 1.9.3 2.9.3 5.5 0 10-3.6 10-8s-4.5-8.6-10-8.6zm.9 4.2l.9 2.3 2.3.9-2.3.9-.9 2.3-.9-2.3-2.3-.9 2.3-.9.9-2.3z"/></svg></div>
+        <div class="body">
+          <h2>Ask Ari</h2>
+          <p>Ask any question about the FedEx hiring process and get a plain answer from our training docs. Team corrections keep it current.</p>
+          <div class="tags"><span class="tag">AI assistant</span><span class="tag lock">opraas.com login</span></div>
+        </div>
+        <span class="btn">Ask a question</span>
+      </a>
+
+      <a class="card" href="https://jpboyer84.github.io/Paradox-Tools/" target="_blank" rel="noopener">
+        <div class="card-top">
+          <div class="icon paradox"><svg viewBox="0 0 24 24"><path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/></svg></div>
+          <h2>Paradox Extension</h2>
+        </div>
+        <p>Download resumes in bulk and disposition candidates in Paradox without clicking through one by one.</p>
+        <div class="tags"><span class="tag">Chrome and Edge</span><span class="tag">v2.3.1</span></div>
+      </a>
+
+      <a class="card" href="https://jpboyer84.github.io/pdf-browser/" target="_blank" rel="noopener">
+        <div class="card-top">
+          <div class="icon pdf"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h7.3a6 6 0 0 1-1.3-3.7A6.3 6.3 0 0 1 20 12.3V8l-6-6zm-1 7V3.5L18.5 9H13zm8.7 12.3l-2-2a4 4 0 1 0-1.4 1.4l2 2a1 1 0 0 0 1.4-1.4zM16.5 20a2 2 0 1 1 0-4 2 2 0 0 1 0 4z"/></svg></div>
+          <h2>PDF Browser</h2>
+        </div>
+        <p>Search any PDF with AND, OR, and NOT, delete pages as you review, and download the trimmed file.</p>
+        <div class="tags"><span class="tag">Boolean search</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="section">
+    <h3>Comp references</h3>
+    <div class="grid">
+
+      <a class="card" href="https://docs.google.com/spreadsheets/d/1JwqjIQXY_pbmRptMdnn1TWT_x_0o3h0DIiVFyPcQl2g/edit?usp=sharing" target="_blank" rel="noopener">
+        <div class="card-top">
+          <div class="icon sheets"><svg viewBox="0 0 24 24"><path d="M19 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM5 8h4v3H5V8zm0 5h4v3H5v-3zm0 7v-2h4v2H5zm14 0h-8v-2h8v2zm0-4h-8v-3h8v3zm0-5h-8V8h8v3zm0-5H5V4h14v2z"/></svg></div>
+          <h2>FEC Hiring Tool</h2>
+        </div>
+        <p>Salary ranges, pay transparency, and offer math for FEC roles by location and grade.</p>
+        <div class="tags"><span class="tag">Google Sheet</span></div>
+      </a>
+
+      <a class="card" href="https://myfedex.sharepoint.com.mcas.ms/:x:/t/InterviewGuides/IQBTA70X-oKYTowqBb1Rv3c5ARfMA4M64o9LQYNaqOARVo0" target="_blank" rel="noopener">
+        <div class="card-top">
+          <div class="icon excel"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 7V3.5L18.5 9H13zM8.2 18l2.3-3.6L8.3 11h1.8l1.3 2.3 1.3-2.3h1.8l-2.2 3.4 2.3 3.6h-1.8L11.4 15.6 10 18H8.2z"/></svg></div>
+          <h2>FDW Hiring Tool</h2>
+        </div>
+        <p>Salary ranges and offer math for FDW roles.</p>
+        <div class="tags"><span class="tag">Excel</span><span class="tag lock">FedEx sign-in</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <div class="footer">OP Tools. Internal use only.</div>
 </div>
+
+<script>
+// Set this to the stats endpoint once it's deployed. Leave blank to hide the impact strip.
+var STATS_URL = '';
+
+(function () {
+  if (!STATS_URL) return;
+  fetch(STATS_URL)
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var fmt = function (n) { return Number(n || 0).toLocaleString(); };
+      document.getElementById('stat-resumes').textContent = fmt(d.resumes);
+      document.getElementById('stat-hours').textContent = fmt(Math.round(d.hours));
+      document.getElementById('stat-questions').textContent = fmt(d.questions);
+      document.getElementById('impact').classList.add('ready');
+    })
+    .catch(function () { /* keep strip hidden if stats are unavailable */ });
+})();
+</script>
 
 </body>
 </html>
